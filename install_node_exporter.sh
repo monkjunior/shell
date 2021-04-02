@@ -1,6 +1,6 @@
 #!/bin/sh -e
 VERSION=1.1.2
-RELEASE=node_exporter-${VERSION}.linux-amd64
+RELEASE=node_exporter-${VERSION}.linux-arm64
 
 _check_root () {
     if [ $(id -u) -ne 0 ]; then

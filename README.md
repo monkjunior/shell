@@ -1,1 +1,1 @@
-# shell
+curl -sSL https://raw.githubusercontent.com/vungocson998/shell/master/install_node_exporter.sh | sudo sh
