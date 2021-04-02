@@ -65,8 +65,9 @@ EOF
 OPTIONS="--collector.textfile.directory /var/lib/node_exporter/textfile_collector"
 EOF
     systemctl daemon-reload
-    systemctl enable node-exporter
-    systemctl start node-exporter
+    systemctl enable node_exporter
+    systemctl start node_exporter
+    echo "node_expterter is running at port 9100"
 else
     echo "No known service management found" >&2;
     exit 1;
