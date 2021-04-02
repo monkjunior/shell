@@ -38,6 +38,8 @@ rm -rf /tmp/${RELEASE}
 groupadd --system prometheus
 useradd -s /sbin/nologin --system -g prometheus prometheus
 
+touch /etc/systemd/system/node_exporter.service /etc/sysconfig/node_exporter
+
 if [ -x "$(command -v systemctl)" ]; then
     cat << EOF > /etc/systemd/system/node_exporter.service
 [Unit]
