@@ -1,6 +1,9 @@
 #!/bin/sh -e
+echo "Which architure do you prefer? (arm64 or amd64) ..."
+read ARCH
+
 VERSION=1.1.2
-RELEASE=node_exporter-${VERSION}.linux-arm64
+RELEASE=node_exporter-${VERSION}.linux-${ARCH}
 
 _check_root () {
     if [ $(id -u) -ne 0 ]; then
@@ -51,15 +54,14 @@ tar xvf ${RELEASE}.tar.gz
 mv ${RELEASE}/node_exporter /usr/bin/
 rm -rf /tmp/${RELEASE}
 
-if grep -q "prometheus" /etc/group
-    then
-        echo "group prometheus existed"
-    else
-        groupadd --system prometheus
-        echo "added group prometheus"
-    fi
+if grep -q "prometheus" /etc/group    then
+    echo "group prometheus existed"
+else
+    groupadd --system prometheus
+    echo "added group prometheus"
+fi
 
-if id "prometheus" &>/dev/null; then
+if id "prometheus" &>/dev/null;    then
     echo 'user prometheus found'
 else
     useradd -s /sbin/nologin --system -g prometheus prometheus
