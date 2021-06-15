@@ -51,10 +51,22 @@ tar xvf ${RELEASE}.tar.gz
 mv ${RELEASE}/node_exporter /usr/bin/
 rm -rf /tmp/${RELEASE}
 
-groupadd --system prometheus
-useradd -s /sbin/nologin --system -g prometheus prometheus
+if grep -q "prometheus" /etc/group
+    then
+        echo "group prometheus existed"
+    else
+        groupadd --system prometheus
+        echo "added group prometheus"
+    fi
 
-touch /etc/systemd/system/node_exporter.service /etc/sysconfig/node_exporter
+if id "prometheus" &>/dev/null; then
+    echo 'user prometheus found'
+else
+    useradd -s /sbin/nologin --system -g prometheus prometheus
+    echo 'added user prometheus'
+fi
+
+touch /etc/systemd/system/node_exporter.service
 
 if [ -x "$(command -v systemctl)" ]; then
     cat << EOF > /etc/systemd/system/node_exporter.service
@@ -67,8 +79,7 @@ After=network-online.target
 Type=simple
 User=prometheus
 Group=prometheus
-EnvironmentFile=/etc/sysconfig/node_exporter
-ExecStart=/usr/bin/node_exporter $OPTIONS
+ExecStart=/usr/bin/node_exporter
 
 SyslogIdentifier=node_exporter
 Restart=always
@@ -77,9 +88,6 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-    cat << EOF > /etc/sysconfig/node_exporter
-OPTIONS="--collector.textfile.directory /var/lib/node_exporter/textfile_collector"
-EOF
     systemctl daemon-reload
     systemctl enable node_exporter
     systemctl start node_exporter
