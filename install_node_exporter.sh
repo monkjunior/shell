@@ -25,6 +25,22 @@ _install_wget () {
     fi
 }
 
+_install_curl () {
+    if [ -x "$(command -v curl)" ]; then
+        return
+    fi
+
+    if [ -x "$(command -v apt-get)" ]; then
+        apt-get update
+        apt-get -y install curl
+    elif [ -x "$(command -v yum)" ]; then
+        yum -y install curl
+    else
+        echo "No known package manager found" >&2;
+        exit 1;
+    fi
+}
+
 _check_root
 _install_curl
 
