@@ -54,7 +54,7 @@ tar xvf ${RELEASE}.tar.gz
 mv ${RELEASE}/node_exporter /usr/bin/
 rm -rf /tmp/${RELEASE}
 
-if grep -q "prometheus" /etc/group    then
+if grep -q "prometheus" /etc/group;    then
     echo "group prometheus existed"
 else
     groupadd --system prometheus
